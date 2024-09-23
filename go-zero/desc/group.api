@@ -1,0 +1,62 @@
+syntax = "v1"
+
+info(
+  title: "group"
+  desc: "group"
+  athor: "yama"
+  version: "v1.0"
+)
+
+type Group {
+  Id uint64 `json:"id"`
+  Name string `json:"name"`
+}
+
+type (
+  GroupListFilter {
+    Name string `json:"name,optional"`
+  }
+  GroupListRequest {
+    PageNum int64 `json:"page_num"`
+    PageSize int64 `json:"page_size"`
+    Filters *GroupListFilter `json:"filters,optional"`
+  }
+  GroupListResponse {
+    Total int64 `json:"total"`
+    PageNum int64 `json:"page_num"`
+    List []*Group `json:"list"`
+  }
+)
+
+type (
+  CreateGroupRequest {
+    Name string `json:"name"`
+  }
+  CreateGroupResponse {
+    Id uint64 `json:"id"`
+  }
+)
+
+type (
+  UpdateGroupRequest {
+    Id uint64 `json:"id"`
+    Name string `json:"name"`
+  }
+  UpdateGroupResponse {
+    Id uint64 `json:"id"`
+  }
+)
+
+type (
+  DeleteGroupRequest {
+    Id uint64 `json:"id"`
+  }
+  DeleteGroupResponse {
+  }
+)
+
+type (
+  GroupDetailRequest {
+    Id uint64 `path:"id"`
+  }
+)

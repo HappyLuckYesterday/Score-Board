@@ -1,0 +1,10 @@
+Name: board
+Host: 0.0.0.0
+Port: 8088
+Timeout: 15000
+JwtAuth:
+  AccessSecret: AccessSecret
+  AccessExpire: 31536000
+
+DB:
+  DataSource: root:@tcp(127.0.0.1:3306)/board?charset=utf8mb4&parseTime=True&loc=Local

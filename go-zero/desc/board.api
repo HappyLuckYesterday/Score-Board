@@ -1,0 +1,180 @@
+syntax = "v1"
+
+info (
+	title:   "board"
+	desc:    "board"
+	athor:   "yama"
+	version: "v1.0"
+)
+
+import "user.api"
+import "group.api"
+import "subject.api"
+import "subscribe.api"
+import "score.api"
+
+@server (
+	prefix: board/api/v1
+	group:  user
+)
+service board {
+	@doc "register"
+	@handler register
+	post /user/register (RegisterRequest) returns (RegisterResponse)
+
+	@doc "login"
+	@handler login
+	post /user/login (LoginRequest) returns (LoginResponse)
+}
+
+@server (
+	prefix: board/api/v1
+	group:  user
+	jwt:    JwtAuth
+)
+service board {
+	@doc "add user"
+	@handler addUser
+	post /user/add (AddUserRequest) returns (AddUserResponse)
+
+	@doc "get user detail"
+	@handler getUserDetail
+	get /user/detail/:id (UserDetailRequest) returns (UserDetailResponse)
+
+	@doc "get user detail"
+	@handler getUserDetailByUserId
+	get /user/detail returns (UserDetailResponse)
+
+	@doc "get user list"
+	@handler getUserList
+	post /user/list (UserListRequest) returns (UserListResponse)
+
+	@doc "update user"
+	@handler updateUser
+	post /user/update (UpdateUserRequest) returns (UpdateUserResponse)
+
+	@doc "update user detail"
+	@handler updateUserDetail
+	put /user/updatedetail (UpdateUserDetailRequest) returns (UpdateUserDetailResponse)
+
+	@doc "delete user"
+	@handler deleteUser
+	post /user/delete (DeleteUserRequest) returns (DeleteUserResponse)
+
+	@doc "user name list"
+	@handler getUserNameList
+	get /user/namelist returns ([]*UserName)
+
+	@doc "update user password"
+	@handler updateUserPassword
+	put /user/password (UpdateUserPasswordRequest) returns (UpdateUserPasswordResponse)
+}
+
+@server (
+	prefix: board/api/v1
+	group:  group
+	jwt:    JwtAuth
+)
+service board {
+	@doc "create group"
+	@handler createGroup
+	post /group/create (CreateGroupRequest) returns (CreateGroupResponse)
+
+	@doc "get group detail"
+	@handler getGroupDetail
+	get /group/detail/:id (GroupDetailRequest) returns (Group)
+
+	@doc "get group list"
+	@handler getGroupList
+	post /group/list (GroupListRequest) returns (GroupListResponse)
+
+	@doc "update group"
+	@handler updateGroup
+	post /group/update (UpdateGroupRequest) returns (UpdateGroupResponse)
+
+	@doc "delete group"
+	@handler deleteGroup
+	post /group/delete (DeleteGroupRequest) returns (DeleteGroupResponse)
+}
+
+@server (
+	prefix: board/api/v1
+	group:  subject
+	jwt:    JwtAuth
+)
+service board {
+	@doc "create subject"
+	@handler createSubject
+	post /subject/create (CreateSubjectRequest) returns (CreateSubjectResponse)
+
+	@doc "get subject detail"
+	@handler getSubjectDetail
+	get /subject/detail/:id (SubjectDetailRequest) returns (Subject)
+
+	@doc "get subject list"
+	@handler getSubjectList
+	post /subject/list (SubjectListRequest) returns (SubjectListResponse)
+
+	@doc "update subject"
+	@handler updateSubject
+	post /subject/update (UpdateSubjectRequest) returns (UpdateSubjectResponse)
+
+	@doc "delete subject"
+	@handler deleteSubject
+	post /subject/delete (DeleteSubjectRequest) returns (DeleteSubjectResponse)
+}
+
+@server (
+	prefix: board/api/v1
+	group:  subscribe
+	jwt:    JwtAuth
+)
+service board {
+	@doc "create subscribe"
+	@handler createSubscribe
+	post /subscribe/create (CreateSubscribeRequest) returns (CreateSubscribeResponse)
+
+	@doc "get subscribe detail"
+	@handler getSubscribeDetail
+	get /subscribe/detail/:id (SubscribeDetailRequest) returns (Subscribe)
+
+	@doc "get subscribe list"
+	@handler getSubscribeList
+	post /subscribe/list (SubscribeListRequest) returns (SubscribeListResponse)
+
+	@doc "update subscribe"
+	@handler updateSubscribe
+	post /subscribe/update (UpdateSubscribeRequest) returns (UpdateSubscribeResponse)
+
+	@doc "delete subscribe"
+	@handler deleteSubscribe
+	post /subscribe/delete (DeleteSubscribeRequest) returns (DeleteSubscribeResponse)
+}
+
+@server (
+	prefix: board/api/v1
+	group:  score
+	jwt:    JwtAuth
+)
+service board {
+	@doc "create score"
+	@handler createScore
+	post /score/create (CreateScoreRequest) returns (CreateScoreResponse)
+
+	@doc "get score detail"
+	@handler getScoreDetail
+	get /score/detail/:id (ScoreDetailRequest) returns (Score)
+
+	@doc "get score list"
+	@handler getScoreList
+	post /score/list (ScoreListRequest) returns (ScoreListResponse)
+
+	@doc "update score"
+	@handler updateScore
+	post /score/update (UpdateScoreRequest) returns (UpdateScoreResponse)
+
+	@doc "delete score"
+	@handler deleteScore
+	post /score/delete (DeleteScoreRequest) returns (DeleteScoreResponse)
+}
+

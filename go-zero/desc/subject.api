@@ -1,0 +1,76 @@
+syntax = "v1"
+
+info(
+  title: "subject"
+  desc: "subject"
+  athor: "yama"
+  version: "v1.0"
+)
+
+type Subject {
+  Id uint64 `json:"id"`
+  Name string `json:"name"`
+  Description string `json:"description"`
+  DueDate int64 `json:"due_date"`
+  Score int64 `json:"score"`
+  Accept string `json:"accept"`
+  CreateId uint64 `json:"create_id"`
+  CreateTime int64 `json:"create_time"`
+}
+
+type (
+  SubjectListFilter {
+    Name string `json:"name,optional"`
+    Accept string `json:"accept,optional"`
+  }
+  SubjectListRequest {
+    PageNum int64 `json:"pageNum"`
+    PageSize int64 `json:"pageSize"`
+    Filters *SubjectListFilter `json:"filters,optional"`
+  }
+  SubjectListResponse {
+    Total int64 `json:"total"`
+    PageNum int64 `json:"pageNum"`
+    List []*Subject `json:"list"`
+  }
+)
+
+type (
+  CreateSubjectRequest {
+    Name string `json:"name"`
+    Description string `json:"description"`
+    DueDate int64 `json:"due_date"`
+    Score int64 `json:"score"`
+    Accept string `json:"accept"`
+  }
+  CreateSubjectResponse {
+    Id uint64 `json:"id"`
+  }
+)
+
+type (
+  SubjectDetailRequest {
+    Id uint64 `path:"id"`
+  }
+)
+
+type (
+  UpdateSubjectRequest {
+    Id uint64 `json:"id"`
+    Name string `json:"name"`
+    Description string `json:"description"`
+    DueDate int64 `json:"due_date"`
+    Score int64 `json:"score"`
+    Accept string `json:"accept"`
+  }
+  UpdateSubjectResponse {
+  }
+)
+
+type (
+  DeleteSubjectRequest {
+    Ids []int64 `json:"ids"`
+  }
+  DeleteSubjectResponse {
+  }
+)

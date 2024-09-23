@@ -1,0 +1,134 @@
+syntax = "v1"
+
+info(
+  title: "user"
+  desc: "user"
+  athor: "yama"
+  version: "v1.0"
+)
+
+type User {
+  Id uint64 `json:"id"`
+  Name string `json:"name"`
+  NickName string `json:"nick_name"`
+  Email string `json:"email"`
+  Type string `json:"type"`
+  Password string `json:"password"`
+  GroupId uint64 `json:"group_id"`
+  ActiveFlag string `json:"active_flag"`
+  CreateTime int64 `json:"create_time"`
+}
+
+type (
+    RegisterRequest  {
+        Name string `json:"name"`
+        NickName string `json:"nick_name"`
+        Email string `json:"email"`
+        Password string `json:"password"`
+        GroupId uint64 `json:"group_id"`
+    }
+    RegisterResponse  {
+    }
+)
+
+type (
+    LoginRequest  {
+        Email string `json:"email"`
+        Password string `json:"password"`
+    }
+    LoginResponse  {
+        AccessToken string `json:"accessToken"`
+    }
+)
+
+type (
+    AddUserRequest  {
+        Name string `json:"name"`
+        NickName string `json:"nick_name"`
+        Email string `json:"email"`
+        Password string `json:"password"`
+        GroupId uint64 `json:"group_id"`
+    }
+
+    AddUserResponse  {
+    }
+)
+
+type (
+    UpdateUserRequest  {
+        Id uint64 `json:"id"`
+        Name string `json:"name"`
+        NickName string `json:"nick_name"`
+        Email string `json:"email"`
+        Password string `json:"password"`
+        GroupId uint64 `json:"group_id"`
+    }
+
+    UpdateUserResponse  {
+    }
+
+    UpdateUserPasswordRequest  {
+        OldPassword string `json:"oldPassword"`
+        NewPassword string `json:"newPassword"`
+    }
+    UpdateUserPasswordResponse{
+    }
+
+    UpdateUserDetailRequest  {
+        Name string `json:"name"`
+        NickName string `json:"nick_name"`
+        GroupId uint64 `json:"group_id"`
+    }
+
+    UpdateUserDetailResponse  {
+    }
+)
+
+type (
+    UserDetailRequest  {
+        Id uint64 `path:"id"`
+    }
+
+    UserDetailResponse  {
+        Id uint64 `json:"id"`
+        Name string `json:"name"`
+        NickName string `json:"nick_name"`
+        Password string `json:"password"`
+        GroupId uint64 `json:"group_id"`
+    }
+)
+
+type (
+    DeleteUserRequest  {
+        Ids []uint64 `json:"ids"`
+    }
+
+    DeleteUserResponse  {
+    }
+)
+
+type (
+    UserListFilter {
+        Name string `json:"name,optional"`
+        NickName string `json:"nick_name,optional"`
+        Email string `json:"email,optional"`
+        Type string `json:"type,optional"`
+        GroupId uint64 `json:"group_id,optional"`
+    }
+    UserListRequest  {
+        PageNum int64 `json:"pageNum"`
+        PageSize int64 `json:"pageSize"`
+        Filters *UserListFilter `json:"filters,optional"`
+    }
+
+    UserListResponse {
+        Total int64 `json:"total"`
+        PageNum int64 `json:"pageNum"`
+        List []*User `json:"list"`
+    }
+
+    UserName {
+        Id uint64 `json:"id"`
+        Name string `json:"name"`
+    }
+)
