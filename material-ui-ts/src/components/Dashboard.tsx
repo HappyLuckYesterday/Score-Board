@@ -21,26 +21,22 @@ const Dashboard: React.FC = () => {
       <Box sx={{ mt: 4 }}>
         <Typography variant="h4">Dashboard</Typography>
 
-        <Box sx={{ mt: 4 }}>
-          <Card>
+        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between' }}>
+          <Card sx={{ flex: 1, mx: 1 }}>
             <CardContent>
               <Typography variant="h6">Total Score</Typography>
               <Typography variant="h4">{totalScore}</Typography>
             </CardContent>
           </Card>
-        </Box>
 
-        <Box sx={{ mt: 2 }}>
-          <Card>
+          <Card sx={{ flex: 1, mx: 1 }}>
             <CardContent>
               <Typography variant="h6">Total Users</Typography>
               <Typography variant="h4">{totalUsers}</Typography>
             </CardContent>
           </Card>
-        </Box>
 
-        <Box sx={{ mt: 2 }}>
-          <Card>
+          <Card sx={{ flex: 1, mx: 1 }}>
             <CardContent>
               <Typography variant="h6">Today's Date</Typography>
               <Typography variant="h4">{today}</Typography>

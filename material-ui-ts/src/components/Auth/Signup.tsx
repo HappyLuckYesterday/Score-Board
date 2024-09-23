@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TextField, Button, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../../utils/board';
-
+import api from '../../utils/api';
 
 const Signup: React.FC = () => {
   const [name, setName] = useState('');
@@ -14,7 +14,7 @@ const Signup: React.FC = () => {
   const handleSignup = async () => {
     try {
       const userData = { name, nick_name: nickName, email, password, group_id: 0 };
-      const result = await register(userData);
+      const result = await api.post('/auth/signup', userData);
       console.log('Signup successful:', result);
       navigate('/login');
     } catch (error) {

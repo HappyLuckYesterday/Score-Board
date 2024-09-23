@@ -32,8 +32,8 @@ export interface Subject {
   due_date: string;
   score: number;
   accept: 'Y' | 'N';
-  create_time: string;
-  create_id: number;
+  create_time: string | null;
+  create_id: number | null;
 }
 
 export interface Subscribe {

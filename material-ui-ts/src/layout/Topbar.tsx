@@ -1,10 +1,11 @@
 // Topbar.tsx
-import React from 'react';
+import React, { useContext } from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../components/AuthContext';
 
 const Topbar: React.FC = () => {
-  const isLoggedIn = false; // Replace this with actual authentication logic
+  const isLoggedIn = true; // Replace this with actual authentication logic
 
   return (
     <AppBar position="static">

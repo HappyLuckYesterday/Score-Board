@@ -3,22 +3,27 @@ import { Box, Button, TextField, Typography, Container, Radio, RadioGroup, FormC
 import { useAuth } from '../AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../utils/board';
+import api from '../../utils/api';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('user'); // default role is 'user'
-  // const { login } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    // login(role);
-    const userData = { email, password };
-      const result = await login(userData);
+    try {
+      const userData = { email, password };
+      const result = await api.post('/auth/login', userData);
       console.log('Signup successful:', result);
-
-    navigate('/dashboard');
+      login(result.data.token);
+      navigate('/dashboard');
+    }
+    catch (error) {
+      console.error('Signup failed:', error);
+    }
   };
 
   return (
