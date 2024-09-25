@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import {
     BarChart,
@@ -174,7 +174,6 @@ const sample_data: DataPoint[] = [
     { "user_name": "Sara", "date": "2024-09-28", "workTime": 16 },
     { "user_name": "Sara", "date": "2024-09-29", "workTime": 18 },
     { "user_name": "Sara", "date": "2024-09-30", "workTime": 15 },
-
 ]
 const sampleusers = ['John', 'Adam', 'Eve', 'Mike']; // Dynamic list of user names
 
@@ -182,19 +181,11 @@ const WorkTimeChart: React.FC = () => {
     const [selectedUser, setSelectedUser] = useState<string>('');
     const [data, setData] = useState<DataPoint[]>([]);
     const [users, setUsers] = useState<string[]>([]);
+    const [selectedDate, setSelectedDate] = useState<string>('2024-09-23'); // Default date
+    const [weekStartDate, setWeekStartDate] = useState<string>('2024-09-23'); // Default week start date
+    const [selectedGraph, setSelectedGraph] = useState<string>('workTimeChart'); // Default graph
+
     const filteredData = data.filter((item) => item.user_name === selectedUser);
-
-    const startDate = new Date("2024-09-24");
-    const endDate = new Date("2024-10-24");
-    const dateMap = new Map(filteredData.map(item => [item.date, item.workTime]));
-
-    for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        const dateString = d.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
-        if (!dateMap.has(dateString)) {
-            // If the date doesn't exist, add it with workTime as 0
-            filteredData.push({ user_name: selectedUser, date: dateString, workTime: 0 });
-        }
-    }
 
     useEffect(() => {
         api.get('worktimes/detail/detail').then((response) => {
@@ -212,42 +203,155 @@ const WorkTimeChart: React.FC = () => {
         return workTime < 15 ? '#FF6347' : '#32CD32';
     };
 
+    // Calculate scores for all users based on selected date
+    const getScoresByDate = (date: string) => {
+        return data
+            .filter(item => item.date === date)
+            .reduce((acc, item) => {
+                acc[item.user_name] = (acc[item.user_name] || 0) + item.workTime;
+                return acc;
+            }, {} as Record<string, number>);
+    };
+
+    // Calculate scores for the week based on selected week start date
+    const getScoresByWeek = (startDate: string) => {
+        const start = new Date(startDate);
+        const end = new Date(start);
+        end.setDate(start.getDate() + 6); // End date is 6 days after start
+
+        return data
+            .filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate >= start && itemDate <= end;
+            })
+            .reduce((acc, item) => {
+                acc[item.user_name] = (acc[item.user_name] || 0) + item.workTime;
+                return acc;
+            }, {} as Record<string, number>);
+    };
+
+    // Get scores for the selected date and week
+    const scoresByDate = getScoresByDate(selectedDate);
+    const scoresByWeek = getScoresByWeek(weekStartDate);
+
+    // Format data for the horizontal bar chart
+    const horizontalChartData = Object.entries(scoresByDate).map(([user_name, workTime]) => ({
+        user_name,
+        workTime,
+    }));
+
+    const weeklyChartData = Object.entries(scoresByWeek).map(([user_name, workTime]) => ({
+        user_name,
+        workTime,
+    }));
+
     return (
         <div>
-            <h2>{selectedUser}'s Work Time Chart</h2>
-            <FormControl fullWidth variant="outlined">
-                <InputLabel id="user-select-label">Select User</InputLabel>
+            {/* Select Graph Type */}
+            <FormControl fullWidth variant="outlined" style={{ marginTop: '20px' }}>
+                <InputLabel id="graph-select-label">Select Graph</InputLabel>
                 <Select
-                    labelId="user-select-label"
-                    value={selectedUser}
-                    onChange={(e) => setSelectedUser(e.target.value)}
-                    label="Select User"
+                    labelId="graph-select-label"
+                    value={selectedGraph}
+                    onChange={(e) => setSelectedGraph(e.target.value)}
+                    label="Select Graph"
                 >
-                    {users.map((user) => (
-                        <MenuItem key={user} value={user}>
-                            {user}
-                        </MenuItem>
-                    ))}
+                    <MenuItem value="workTimeChart">Work Time Chart</MenuItem>
+                    <MenuItem value="dateChart">Work Time for Selected Date</MenuItem>
+                    <MenuItem value="weekChart">Weekly Work Times</MenuItem>
                 </Select>
             </FormControl>
 
-            <ResponsiveContainer width="100%" height={600}>
-                <BarChart data={filteredData} margin={{ top: 70, right: 30, left: 20, bottom: 25 }}>
-                    {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="workTime" fill="#8884d8">
-                        {filteredData.map((entry, index) => (
-                            <Cell
-                                key={`cell-${index}`}
-                                fill={getBarColor(entry.workTime)}
-                            />
-                        ))}
-                    </Bar>
-                </BarChart>
-            </ResponsiveContainer>
+            {/* Render Selected Graph */}
+            {selectedGraph === 'workTimeChart' && (
+                <>
+                    <FormControl fullWidth variant="outlined" style={{ marginTop: '20px' }}>
+                        <InputLabel id="user-select-label">Select User</InputLabel>
+                        <Select
+                            labelId="user-select-label"
+                            value={selectedUser}
+                            onChange={(e) => setSelectedUser(e.target.value)}
+                            label="Select User"
+                        >
+                            {users.map((user) => (
+                                <MenuItem key={user} value={user}>
+                                    {user}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    
+                    <ResponsiveContainer width="100%" height={600}>
+                        <BarChart data={filteredData} margin={{ top: 70, right: 30, left: 20, bottom: 25 }}>
+                            <XAxis dataKey="date" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="workTime" fill="#8884d8">
+                                {filteredData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={getBarColor(entry.workTime)} />
+                                ))}
+                            </Bar>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </>
+            )}
+
+            {selectedGraph === 'dateChart' && (
+                <>
+                    {/* Date Selector for Scores */}
+                    <FormControl fullWidth variant="outlined" style={{ marginTop: '20px' }}>
+                        <TextField
+                            label="Select Date"
+                            type="date"
+                            value={selectedDate}
+                            onChange={(e) => setSelectedDate(e.target.value)}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </FormControl>
+
+                    {/* Horizontal Bar Chart for Selected Date */}
+                    <h3>Work Time for {selectedDate}</h3>
+                    <ResponsiveContainer width="100%" height={400}>
+                        <BarChart data={horizontalChartData} layout="vertical" margin={{ top: 20, right: 30, left: 20, bottom: 25 }}>
+                            <XAxis type="number" />
+                            <YAxis type="category" dataKey="user_name" />
+                            <Tooltip />
+                            <Bar dataKey="workTime" fill="#8884d8" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </>
+            )}
+
+            {selectedGraph === 'weekChart' && (
+                <>
+                    {/* Week Selector for Weekly Scores */}
+                    <FormControl fullWidth variant="outlined" style={{ marginTop: '20px' }}>
+                        <TextField
+                            label="Select Week Start Date"
+                            type="date"
+                            value={weekStartDate}
+                            onChange={(e) => setWeekStartDate(e.target.value)}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </FormControl>
+
+                    {/* Horizontal Bar Chart for Selected Week */}
+                    <h3>Weekly Work Times from {weekStartDate} to {new Date(new Date(weekStartDate).setDate(new Date(weekStartDate).getDate() + 6)).toISOString().split('T')[0]}</h3>
+                    <ResponsiveContainer width="100%" height={400}>
+                        <BarChart data={weeklyChartData} layout="vertical" margin={{ top: 20, right: 30, left: 20, bottom: 25 }}>
+                            <XAxis type="number" />
+                            <YAxis type="category" dataKey="user_name" />
+                            <Tooltip />
+                            <Bar dataKey="workTime" fill="#8884d8" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </>
+            )}
         </div>
     );
 };
