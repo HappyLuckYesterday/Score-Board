@@ -1,7 +1,8 @@
 const express = require('express');
-const { getAllScores, getScoreById, createScore, updateScore, deleteScore } = require('../controllers/scoreController');
+const { getAllScores, getAllDetail, getScoreById, createScore, updateScore, deleteScore } = require('../controllers/scoreController');
 const router = express.Router();
 
+router.get('/detail/detail', getAllDetail);
 router.get('/', getAllScores);
 router.get('/:id', getScoreById);
 router.post('/', createScore);

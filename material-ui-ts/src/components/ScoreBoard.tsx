@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   LineChart,
   Line,
@@ -9,6 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import api from '../utils/api';
 
 const data: DataPoint[] = [
   { date: '2024-09-01', group: 1, user: "John", subject: "earn", score: 200 },
@@ -45,6 +46,13 @@ const Scoreboard: React.FC = () => {
   const chartDataMap: { [key: string]: { group: number; score: number }[] } = {};
   const accumulatedScores: { [key: number]: number } = {};
   const detailedScores: { [key: string]: { user: string; group: number; score: number }[] } = {};
+
+  useEffect(() => {
+    api.get('/scores/detail/detail').then((response) => {
+      const data = response.data;
+      console.log(data);
+    });
+  },[])
 
   // Processing data to accumulate scores
   data.forEach(({ date, group, user, score }) => {

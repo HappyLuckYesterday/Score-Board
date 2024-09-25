@@ -8,6 +8,18 @@ const getAllScores = (req, res) => {
     });
 };
 
+const getAllDetail = (req, res) => {
+    const { pageNum = 1, pageSize = 10 } = req.query;
+    console.log("pageNum: ", pageNum);
+    console.log("pageSize: ", pageSize);
+    Score.getAllDetail(pageNum, pageSize, (err, results) => {
+        console.log("results: ", results);
+        console.log("error", err);
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+};
+
 const getScoreById = (req, res) => {
     const { id } = req.params;
     Score.getById(id, (err, results) => {
@@ -39,4 +51,4 @@ const deleteScore = (req, res) => {
     });
 };
 
-module.exports = { getAllScores, getScoreById, createScore, updateScore, deleteScore };
+module.exports = { getAllScores, getAllDetail, getScoreById, createScore, updateScore, deleteScore };
