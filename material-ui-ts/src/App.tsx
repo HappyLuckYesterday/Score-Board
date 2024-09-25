@@ -17,6 +17,7 @@ import Sidebar from './layout/Sidebar';
 import { useAuth } from './components/AuthContext';
 import Logout from './components/Auth/Logout';
 import WorkTimeBoardPage from './pages/WorkTimeBoardPage';
+import WorkTimeTablePage from './pages/WorkTimeTablePage';
 
 const App: React.FC = () => {
 
@@ -39,6 +40,7 @@ const App: React.FC = () => {
             <Route path="/group-table" element={<GroupTablePage />} />
             <Route path="/subject-table" element={<SubjectTablePage />} />
             <Route path="/subscribe-table" element={<SubscribeTablePage />} />
+            <Route path="/worktime-table" element={<WorkTimeTablePage />} />
           </Routes>
         </div>
       </div>

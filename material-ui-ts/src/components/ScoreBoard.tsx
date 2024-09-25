@@ -112,7 +112,7 @@ const Scoreboard: React.FC = () => {
                     <div>
                       {Array.isArray(details) && details.map((detail: Detail, index: number) => (
                         "Group "+detail.group == groupKey && <p key={`${detail.user}-${index}`}>
-                          {detail.user} {detail.score >= 0 ? `+${detail.score}` : detail.score} {detail.subject}
+                          {detail.user} get {detail.score >= 0 ? `+${detail.score}` : detail.score} by {detail.subject}
                         </p>
                       ))}
                     </div>

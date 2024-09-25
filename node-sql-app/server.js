@@ -6,6 +6,7 @@ const groupRoutes = require('./routes/groupRoutes');
 const scoreRoutes = require('./routes/scoreRoutes');
 const subscribeRoutes = require('./routes/subscribeRoutes');
 const subjectRoutes = require('./routes/subjectRoutes');
+const workTimeRoutes = require('./routes/workTimeRoutes');
 const { authenticateJWT } = require('./middleware/authMiddleware');
 require('dotenv').config();
 
@@ -22,6 +23,7 @@ app.use('/board/api/groups', groupRoutes);
 app.use('/board/api/scores', scoreRoutes);
 app.use('/board/api/subscribes', authenticateJWT, subscribeRoutes);
 app.use('/board/api/subjects', subjectRoutes);
+app.use('/board/api/worktimes', workTimeRoutes);
 
 // Start the server
 app.listen(port, () => {

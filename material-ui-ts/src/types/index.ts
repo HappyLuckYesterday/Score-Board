@@ -47,3 +47,10 @@ export interface Subscribe {
   update_id: number;
   update_time: string;
 }
+
+export interface WorkTime {
+  id: number;
+  user_id: number;
+  date: string;
+  work_time: number;
+}

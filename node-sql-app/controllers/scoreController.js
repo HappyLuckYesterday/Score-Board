@@ -10,11 +10,7 @@ const getAllScores = (req, res) => {
 
 const getAllDetail = (req, res) => {
     const { pageNum = 1, pageSize = 10 } = req.query;
-    console.log("pageNum: ", pageNum);
-    console.log("pageSize: ", pageSize);
     Score.getAllDetail(pageNum, pageSize, (err, results) => {
-        console.log("results: ", results);
-        console.log("error", err);
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);
     });
