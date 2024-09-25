@@ -14,9 +14,9 @@ const Subject = {
         db.query('SELECT * FROM subject WHERE id = ?', [id], callback);
     },
     update: (id, subjectData, callback) => {
-        const { name, description, due_date, score, accept, update_id } = subjectData;
-        db.query('UPDATE subject SET name = ?, description = ?, due_date = ?, score = ?, accept = ?, update_id = ? WHERE id = ?', 
-            [name, description, due_date, score, accept, update_id, id], callback);
+        const { name, description, due_date, score, accept } = subjectData;
+        db.query('UPDATE subject SET name = ?, description = ?, due_date = ?, score = ?, accept = ? WHERE id = ?', 
+            [name, description, due_date, score, accept, id], callback);
     },
     delete: (id, callback) => {
         db.query('DELETE FROM subject WHERE id = ?', [id], callback);

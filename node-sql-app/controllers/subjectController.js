@@ -16,6 +16,13 @@ const getSubjectById = (req, res) => {
     });
 };
 
+const createSubject = (req, res) => {
+    Subject.create(req.body, (err, data) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: 'Subject created successfully', id: data.insertId });
+    });
+};
+
 const updateSubject = (req, res) => {
     const { id } = req.params;
     Subject.update(id, req.body, (err) => {
@@ -32,4 +39,4 @@ const deleteSubject = (req, res) => {
     });
 };
 
-module.exports = { getAllSubjects, getSubjectById, updateSubject, deleteSubject };
+module.exports = { getAllSubjects, getSubjectById, createSubject, updateSubject, deleteSubject };

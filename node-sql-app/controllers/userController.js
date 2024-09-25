@@ -17,6 +17,14 @@ const getUserById = (req, res) => {
   });
 };
 
+const createUser = (req, res) => {
+  const { name, nick_name, email, password, group_id, role } = req.body;
+  User.create({ name, nick_name, email, password, group_id, role }, (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: 'User created successfully', id: results.insertId });
+  });
+};
+
 const updateUser = (req, res) => {
   const { id } = req.params;
   const { name, nick_name, email, password, group_id, role } = req.body;
@@ -34,4 +42,4 @@ const deleteUser = (req, res) => {
   });
 };
 
-module.exports = { getAllUsers, getUserById, updateUser, deleteUser };
+module.exports = { getAllUsers, getUserById, createUser, updateUser, deleteUser };

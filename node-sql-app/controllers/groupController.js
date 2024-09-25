@@ -16,6 +16,13 @@ const getGroupById = (req, res) => {
     });
 };
 
+const createGroup = (req, res) => {
+    Group.create(req.body, (err, data) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: 'Group created successfully', id: data.insertId });
+    });
+};
+
 const updateGroup = (req, res) => {
     const { id } = req.params;
     Group.update(id, req.body, (err) => {
@@ -32,4 +39,4 @@ const deleteGroup = (req, res) => {
     });
 };
 
-module.exports = { getAllGroups, getGroupById, updateGroup, deleteGroup };
+module.exports = { getAllGroups, getGroupById, createGroup, updateGroup, deleteGroup };

@@ -6,7 +6,6 @@ import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ProfilePage from './pages/ProfilePage';
-import UserRolePage from './pages/UserRolePage';
 import ScoreboardPage from './pages/ScoreboardPage';
 import UserTablePage from './pages/UserTablePage';
 import ScoreTablePage from './pages/ScoreTablePage';
@@ -16,6 +15,8 @@ import SubscribeTablePage from './pages/SubscribeTablePage';
 import Topbar from './layout/Topbar';
 import Sidebar from './layout/Sidebar';
 import { useAuth } from './components/AuthContext';
+import Logout from './components/Auth/Logout';
+import WorkTimeBoardPage from './pages/WorkTimeBoardPage';
 
 const App: React.FC = () => {
 
@@ -29,8 +30,9 @@ const App: React.FC = () => {
             <Route path="/" element={<DashboardPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/logout" element={<Logout />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/user-role" element={<UserRolePage />} />
+            <Route path="/worktimeboard" element={<WorkTimeBoardPage />} />
             <Route path="/scoreboard" element={<ScoreboardPage />} />
             <Route path="/user-table" element={<UserTablePage />} />
             <Route path="/score-table" element={<ScoreTablePage />} />

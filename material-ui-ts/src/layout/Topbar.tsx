@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext';
 
 const Topbar: React.FC = () => {
-  const isLoggedIn = true; // Replace this with actual authentication logic
-
+  const { token } = useAuth();
+  const isLoggedIn = (token != null); // Replace this with actual authentication logic
+  console.log("top:", token);
   return (
     <AppBar position="static">
       <Toolbar>
@@ -16,7 +17,7 @@ const Topbar: React.FC = () => {
         {isLoggedIn ? (
           <>
             <Button color="inherit" component={Link} to="/profile">Profile</Button>
-            <Button color="inherit">Logout</Button>
+            <Button color="inherit" component={Link} to="/logout">Logout</Button>
           </>
         ) : (
           <>

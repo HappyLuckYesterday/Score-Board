@@ -38,7 +38,16 @@ const SubjectTable: React.FC = () => {
 
   useEffect(() => {
     // Fetch subjects data here
-    
+    const fetchSubjects = async () => {
+      try {
+        const response = await api.get('/subjects');
+        setSubjects(response.data);
+      } catch (error) {
+        console.error('Error fetching subjects:', error);
+      }
+    };
+
+    fetchSubjects();
   }, []);
 
   const handleClickOpen = (subject: Subject | null) => {
@@ -68,20 +77,33 @@ const SubjectTable: React.FC = () => {
   const handleSubmit = () => {
     if (currentSubject) {
       // Update logic here
-      setSubjects(subjects.map((subject) => subject.id === currentSubject.id ? { ...formData, id: subject.id } : subject));
-      setFormData({ ...formData });
+      api.put(`/subjects/${currentSubject.id}`, formData).then((response) => {
+          setSubjects(subjects.map((subject) => subject.id === currentSubject.id ? { ...formData, id: subject.id } : subject));
+          setFormData({ ...formData });
+      }).catch((error) => {
+          console.error('Error updating subject:', error);
+      });
     } else {
       // Create logic here
-      const newSubject: Subject = { ...formData, id: subjects.length + 1 };
-      setSubjects([...subjects, newSubject]);
-      setFormData({ ...formData });
+      api.post('/subjects', formData).then((response) => {
+        console.log('Subject created:', response.data);
+        formData.id = response.data.id;
+          setSubjects([...subjects, formData]);
+          setFormData({ ...formData });
+      }).catch((error) => {
+          console.error('Error creating subject:', error);
+      });
     }
     handleClose();
   };
 
   const handleDelete = (id: number) => {
     // Delete logic here
-    setSubjects(subjects.filter((subject) => subject.id !== id));
+    api.delete(`/subjects/${id}`).then(() => {
+        setSubjects(subjects.filter((subject) => subject.id !== id));
+    }).catch((error) => {
+        console.error('Error deleting subject:', error);
+    });
   };
 
   return (
@@ -96,31 +118,33 @@ const SubjectTable: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Due Date</TableCell>
-              <TableCell>Score</TableCell>
-              <TableCell>Accept</TableCell>
-              <TableCell>Actions</TableCell>
+              {/* <TableCell>ID</TableCell> */}
+              <TableCell style={{ width: '20%', textAlign: 'left' }}>Name</TableCell>
+              <TableCell style={{ width: '40%', textAlign: 'left' }}>Description</TableCell>
+              {/* <TableCell>Due Date</TableCell> */}
+              <TableCell style={{ width: '15%', textAlign: 'left' }}>Score</TableCell>
+              <TableCell style={{ width: '15%', textAlign: 'left' }}>Accept</TableCell>
+              <TableCell style={{ width: '20%', textAlign: 'center' }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {subjects.map((subject) => (
               <TableRow key={subject.id}>
-                <TableCell>{subject.id}</TableCell>
+                {/* <TableCell>{subject.id}</TableCell> */}
                 <TableCell>{subject.name}</TableCell>
                 <TableCell>{subject.description}</TableCell>
-                <TableCell>{subject.due_date}</TableCell>
+                {/* <TableCell>{subject.due_date}</TableCell> */}
                 <TableCell>{subject.score}</TableCell>
                 <TableCell>{subject.accept ? 'Yes' : 'No'}</TableCell>
                 <TableCell>
-                  <Button variant="contained" color="primary" onClick={() => handleClickOpen(subject)}>
-                    Update
-                  </Button>
-                  <Button variant="contained" color="secondary" onClick={() => handleDelete(subject.id)}>
-                    Delete
-                  </Button>
+                    <Box display="flex" justifyContent="center" gap="16px">
+                        <Button variant="contained" color="primary" onClick={() => handleClickOpen(subject)}>
+                            Update
+                        </Button>
+                        <Button variant="contained" color="secondary" onClick={() => handleDelete(subject.id)}>
+                            Delete
+                        </Button>
+                    </Box>
                 </TableCell>
               </TableRow>
             ))}
@@ -150,7 +174,7 @@ const SubjectTable: React.FC = () => {
             value={formData.description}
             onChange={handleChange}
           />
-          <TextField
+          {/* <TextField
             margin="dense"
             name="due_date"
             label="Due Date"
@@ -159,7 +183,7 @@ const SubjectTable: React.FC = () => {
             InputLabelProps={{ shrink: true }}
             value={formData.due_date}
             onChange={handleChange}
-          />
+          /> */}
           <TextField
             margin="dense"
             name="score"
@@ -169,7 +193,7 @@ const SubjectTable: React.FC = () => {
             value={formData.score}
             onChange={handleChange}
           />
-          <Select
+          {/* <Select
             margin="dense"
             name="accept"
             label="Accept"
@@ -179,15 +203,15 @@ const SubjectTable: React.FC = () => {
           >
             <MenuItem value="Y">Yes</MenuItem>
             <MenuItem value="N">No</MenuItem>
-          </Select>
+          </Select> */}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} color="primary">
-            {currentSubject ? 'Update' : 'Create'}
-          </Button>
+        <DialogActions style={{ justifyContent: 'center', gap: '16px' }}>
+            <Button onClick={handleClose} color="primary">
+                Cancel
+            </Button>
+            <Button onClick={handleSubmit} color="primary">
+                {currentSubject ? 'Update' : 'Create'}
+            </Button>
         </DialogActions>
       </Dialog>
     </>

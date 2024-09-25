@@ -4,7 +4,7 @@ export interface User {
   name: string;
   nick_name: string;
   email: string;
-  type: string;
+  role: string;
   active_flag: 'Y' | 'N';
   group_id: number;
 }
@@ -19,6 +19,8 @@ export interface Score {
   user_id: number;
   group_id: number;
   score: number;
+  subject_id: number;
+  description: string;
   create_id: number;
   create_time: string;
   update_id: number;

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import jwtDecode from 'jwt-decode';
 
 interface AuthContextProps {
   isAuthenticated: boolean;
@@ -6,6 +7,13 @@ interface AuthContextProps {
   token: string | null;
   login: (role: string) => void;
   logout: () => void;
+}
+
+interface JwtPayload {
+  sub: string; // Subject (user ID)
+  name: string; // User's name
+  iat: number; // Issued at
+  exp: number; // Expiration time
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -18,12 +26,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return localStorage.getItem('token') || null; // Load token from localStorage
   });
 
-  const login = (newToken: string) => {
-    setToken(newToken);
-    localStorage.setItem('token', newToken); // Save token to localStorage
-  };
+    const login = (newToken: string) => {
+      setToken(newToken);
 
-  const logout = () => {
+      let decoded: JwtPayload | null = null;
+
+      localStorage.setItem('token', newToken); // Save token to localStorage
+      setIsAuthenticated(true);
+    };
+    const logout = () => {
       setToken(null);
       localStorage.removeItem('token'); // Remove token from localStorage
   };

@@ -29,6 +29,9 @@ const Sidebar: React.FC = () => {
         <ListItem component={Link} to="/scoreboard">
           <ListItemText primary="Scoreboard" />
         </ListItem>
+        <ListItem component={Link} to="/worktimeboard">
+          <ListItemText primary="Work Time" />
+        </ListItem>
         <ListItem component={Link} to="/user-table">
           <ListItemText primary="User Table" />
         </ListItem>
@@ -41,9 +44,9 @@ const Sidebar: React.FC = () => {
         <ListItem component={Link} to="/subject-table">
           <ListItemText primary="Subject Table" />
         </ListItem>
-        <ListItem component={Link} to="/subscribe-table">
+        {/* <ListItem component={Link} to="/subscribe-table">
           <ListItemText primary="Subscribe Table" />
-        </ListItem>
+        </ListItem> */}
       </List>
     </Drawer>
   );

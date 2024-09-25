@@ -16,6 +16,13 @@ const getScoreById = (req, res) => {
     });
 };
 
+const createScore = (req, res) => {
+    Score.create(req.body, (err, data) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: 'Score created successfully', id: data.insertId });
+    });
+};
+
 const updateScore = (req, res) => {
     const { id } = req.params;
     Score.update(id, req.body, (err) => {
@@ -32,4 +39,4 @@ const deleteScore = (req, res) => {
     });
 };
 
-module.exports = { getAllScores, getScoreById, updateScore, deleteScore };
+module.exports = { getAllScores, getScoreById, createScore, updateScore, deleteScore };

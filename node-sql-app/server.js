@@ -17,11 +17,11 @@ app.use(cors());
 
 // Routes
 app.use('/board/api/auth', authRoutes);
-app.use('/board/api/users', authenticateJWT, userRoutes);
-app.use('/board/api/groups', authenticateJWT, groupRoutes);
-app.use('/board/api/scores', authenticateJWT, scoreRoutes);
+app.use('/board/api/users', userRoutes);
+app.use('/board/api/groups', groupRoutes);
+app.use('/board/api/scores', scoreRoutes);
 app.use('/board/api/subscribes', authenticateJWT, subscribeRoutes);
-app.use('/board/api/subjects', authenticateJWT, subjectRoutes);
+app.use('/board/api/subjects', subjectRoutes);
 
 // Start the server
 app.listen(port, () => {
