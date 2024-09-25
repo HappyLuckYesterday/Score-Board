@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   LineChart,
   Line,
@@ -11,24 +11,6 @@ import {
 } from 'recharts';
 import api from '../utils/api';
 
-const data: DataPoint[] = [
-  { date: '2024-09-01', group: 1, user: "John", subject: "earn", score: 200 },
-  { date: '2024-09-01', group: 1, user: "Bob", subject: "earn", score: 200 },
-  { date: '2024-09-02', group: 1, user: "John", subject: "earn", score: 300 },
-  { date: '2024-09-02', group: 1, user: "Bob", subject: "earn", score: 200 },
-  { date: '2024-09-03', group: 1, user: "John", subject: "earn", score: 400 },
-  { date: '2024-09-03', group: 1, user: "Bob", subject: "earn", score: 200 },
-  { date: '2024-09-04', group: 1, user: "John", subject: "earn", score: 350 },
-  { date: '2024-09-05', group: 1, user: "John", subject: "earn", score: 450 },
-  { date: '2024-09-01', group: 2, user: "Alice", subject: "earn", score: 100 },
-  { date: '2024-09-02', group: 2, user: "Alice", subject: "earn", score: 200 },
-  { date: '2024-09-02', group: 2, user: "Mike", subject: "earn", score: 200 },
-  { date: '2024-09-03', group: 2, user: "Alice", subject: "earn", score: 300 },
-  { date: '2024-09-04', group: 2, user: "Alice", subject: "earn", score: 450 },
-  { date: '2024-09-04', group: 2, user: "Mike", subject: "earn", score: -200 },
-  { date: '2024-09-05', group: 2, user: "Alice", subject: "earn", score: 350 },
-];
-
 interface DataPoint {
   date: string;
   group: number;
@@ -37,69 +19,109 @@ interface DataPoint {
   score: number;
 }
 
+interface Detail {
+  user: string;
+  group: number;
+  score: number;
+  subject: string;
+}
+
+interface GroupData {
+  group: number;
+  score: number;
+  details: Detail[];
+}
+
 interface ChartData {
   date: string;
-  [key: string]: number | string; // Dynamic keys for group scores
+  [key: string]: number | string | Detail[]; // Allow for dynamic keys, including details
 }
 
 const Scoreboard: React.FC = () => {
-  const chartDataMap: { [key: string]: { group: number; score: number }[] } = {};
-  const accumulatedScores: { [key: number]: number } = {};
-  const detailedScores: { [key: string]: { user: string; group: number; score: number }[] } = {};
+  const [chartData, setChartData] = useState<ChartData[]>([]);
 
   useEffect(() => {
     api.get('/scores/detail/detail').then((response) => {
-      const data = response.data;
-      console.log(data);
+      const fetchedData: DataPoint[] = response.data.map((item: any) => ({
+        date: item.create_date,
+        group: item.group_id,
+        user: item.user_name,
+        subject: item.subject_name,
+        score: item.score,
+      }));
+
+      // Sort data by date
+      fetchedData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+      const accumulatedScores: { [key: number]: number } = {};
+      const chartDataMap: { [key: string]: GroupData[] } = {};
+
+      fetchedData.forEach(({ date, group, user, score, subject }) => {
+        if (!accumulatedScores[group]) {
+          accumulatedScores[group] = 0;
+        }
+
+        accumulatedScores[group] += score;
+
+        if (!chartDataMap[date]) {
+          chartDataMap[date] = [];
+        }
+        const existingGroup = chartDataMap[date].find(item => item.group === group);
+        if (existingGroup) {
+          existingGroup.score = accumulatedScores[group];
+          existingGroup.details.push({ user, group, score, subject });
+        } else {
+          chartDataMap[date].push({
+            group,
+            score: accumulatedScores[group],
+            details: [{ user, group, score, subject }],
+          });
+        }
+      });
+
+      const newchartData: ChartData[] = Object.entries(chartDataMap)
+        .map(([date, scores]) => ({
+          date,
+          ...Object.fromEntries(scores.map(({ group, score }) => [`Group ${group}`, score])),
+          details: scores.flatMap(groupData => groupData.details), // Flatten details for tooltip
+        }))
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+      setChartData(newchartData);
     });
-  },[])
-
-  // Processing data to accumulate scores
-  data.forEach(({ date, group, user, score }) => {
-    // Initialize group score if it doesn't exist
-    if (!accumulatedScores[group]) {
-      accumulatedScores[group] = 0;
-    }
-    
-    // Update accumulated score
-    accumulatedScores[group] += score;
-
-    // Prepare chart data
-    if (!chartDataMap[date]) {
-      chartDataMap[date] = [];
-    }
-    const existingGroup = chartDataMap[date].find(item => item.group === group);
-    if (existingGroup) {
-      existingGroup.score = accumulatedScores[group]; // Update accumulated score for the date
-    } else {
-      chartDataMap[date].push({ group, score: accumulatedScores[group] });
-    }
-
-    // Collect detailed scores for tooltip
-    if (!detailedScores[date]) {
-      detailedScores[date] = [];
-    }
-    detailedScores[date].push({ user, group, score });
-  });
-
-  const chartData: ChartData[] = Object.entries(chartDataMap).map(([date, scores]) => ({
-    date,
-    ...Object.fromEntries(scores.map(({ group, score }) => [`Group ${group}`, score]))
-  }));
+  }, []);
 
   const renderTooltip = (props: any) => {
     const { active, payload, label } = props;
 
     if (active && payload && payload.length) {
-      const userDetails = detailedScores[label].map(({ user, group, score }) => (
-        <p key={`${group}-${user}`}>Group {group}: {score} by {user}</p>
-      ));
-      return (
-        <div style={{ backgroundColor: 'white', border: '1px solid #ccc', padding: '10px' }}>
-          <p>{label}</p>
-          {userDetails}
-        </div>
-      );
+      const groupDetails = chartData.find(data => data.date === label);
+      if (groupDetails) {
+        return (
+          <div style={{ backgroundColor: 'white', border: '1px solid #ccc', padding: '10px' }}>
+            <p>{label}</p>
+            {Object.keys(groupDetails)
+              .filter(key => key.startsWith('Group'))
+              .map(groupKey => {
+                const groupScore = groupDetails[groupKey] as number; // Ensure it's treated as a number
+                const details = groupDetails.details as Detail[]; // Assert details as Detail[]
+
+                return (
+                  <div key={groupKey}>
+                    <strong>{groupKey}: {groupScore}</strong>
+                    <div>
+                      {Array.isArray(details) && details.map((detail: Detail, index: number) => (
+                        "Group "+detail.group == groupKey && <p key={`${detail.user}-${index}`}>
+                          {detail.user} {detail.score >= 0 ? `+${detail.score}` : detail.score} {detail.subject}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        );
+      }
     }
 
     return null;
@@ -113,15 +135,8 @@ const Scoreboard: React.FC = () => {
         <YAxis />
         <Tooltip content={renderTooltip} />
         <Legend />
-        {Array.from(new Set(data.map(d => d.group))).map((group, index) => (
-          <Line
-            key={group}
-            type="monotone"
-            dataKey={`Group ${group}`}
-            stroke={index % 2 === 0 ? 'red' : 'blue'} // Alternate red and blue colors
-            activeDot={{ r: 8 }}
-          />
-        ))}
+        <Line type="monotone" dataKey="Group 1" stroke="#8884d8" />
+        <Line type="monotone" dataKey="Group 2" stroke="#82ca9d" />
       </LineChart>
     </ResponsiveContainer>
   );
