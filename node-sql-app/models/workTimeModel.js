@@ -13,6 +13,27 @@ const WorkTime = {
         const offset = (pageNum - 1) * pageSize;
         db.query('SELECT * FROM `worktime` LIMIT ?, ?', [offset, pageSize], callback);
     },
+    getAllDetail: (pageNum, pageSize, callback) => {
+        const offset = (pageNum - 1) * pageSize;
+        db.query(`  SELECT 
+                        uu.name AS user_name,
+                        DATE_FORMAT(wt.date, '%Y-%m-%d') AS date,
+                        wt.work_time AS workTime
+                    FROM 
+                        worktime AS wt
+                    JOIN 
+                    user AS uu ON wt.user_id = uu.user_id
+                    WHERE 
+                    1=1
+                    LIMIT ?, ?`,
+                    [offset, pageSize], 
+                    (error, results) => {
+                        if (error) {
+                            return callback(error);
+                        }
+                        callback(null, results);
+                    });
+    },
     getById: (id, callback) => {
         db.query('SELECT * FROM `worktime` WHERE id = ?', [id], callback);
     },

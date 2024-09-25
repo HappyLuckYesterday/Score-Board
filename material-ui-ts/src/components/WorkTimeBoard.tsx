@@ -1,5 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     BarChart,
     Bar,
@@ -11,6 +11,7 @@ import {
     ResponsiveContainer,
     Cell,
 } from 'recharts';
+import api from '../utils/api';
 
 interface DataPoint {
     user_name: string;
@@ -18,7 +19,7 @@ interface DataPoint {
     workTime: number;
 }
 
-const data: DataPoint[] = [
+const sample_data: DataPoint[] = [
     { "user_name": "John", "date": "2024-09-01", "workTime": 15 },
     { "user_name": "John", "date": "2024-09-02", "workTime": 14 },
     { "user_name": "John", "date": "2024-09-03", "workTime": 16 },
@@ -175,12 +176,37 @@ const data: DataPoint[] = [
     { "user_name": "Sara", "date": "2024-09-30", "workTime": 15 },
 
 ]
-const users = ['John', 'Adam', 'Eve', 'Mike']; // Dynamic list of user names
+const sampleusers = ['John', 'Adam', 'Eve', 'Mike']; // Dynamic list of user names
 
 const WorkTimeChart: React.FC = () => {
-    const [selectedUser, setSelectedUser] = useState<string>('John');
-
+    const [selectedUser, setSelectedUser] = useState<string>('');
+    const [data, setData] = useState<DataPoint[]>([]);
+    const [users, setUsers] = useState<string[]>([]);
     const filteredData = data.filter((item) => item.user_name === selectedUser);
+
+    const startDate = new Date("2024-09-24");
+    const endDate = new Date("2024-10-24");
+    const dateMap = new Map(filteredData.map(item => [item.date, item.workTime]));
+
+    for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dateString = d.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+        if (!dateMap.has(dateString)) {
+            // If the date doesn't exist, add it with workTime as 0
+            filteredData.push({ user_name: selectedUser, date: dateString, workTime: 0 });
+        }
+    }
+
+    useEffect(() => {
+        api.get('worktimes/detail/detail').then((response) => {
+            setData(response.data);
+            const uniqueUserNames: string[] = Array.from(new Set(response.data.map((item: { user_name: string }) => item.user_name)));
+            setUsers(uniqueUserNames);
+            setSelectedUser(uniqueUserNames[0]);
+        })
+        .catch((error) => {
+            console.error('Error fetching data:', error);
+        });
+    }, []);
 
     const getBarColor = (workTime: number) => {
         return workTime < 15 ? '#FF6347' : '#32CD32';

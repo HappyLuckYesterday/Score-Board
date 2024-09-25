@@ -79,6 +79,29 @@ const Scoreboard: React.FC = () => {
         }
       });
 
+      const startDate = new Date("2024-09-24");
+      const endDate = new Date("2024-10-24");
+
+      const convertDateFormat = (isoDate: string) => {
+        const date = new Date(isoDate);
+        
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+        const day = String(date.getDate()).padStart(2, '0');
+        
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        
+        return `${year}-${month}-${day}`;
+      };
+
+      for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+        if (!chartDataMap[convertDateFormat(d.toString())]) {
+          chartDataMap[convertDateFormat(d.toString())] = [];
+        }
+      }
+
       const newchartData: ChartData[] = Object.entries(chartDataMap)
         .map(([date, scores]) => ({
           date,

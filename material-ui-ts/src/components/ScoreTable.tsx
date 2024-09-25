@@ -49,7 +49,7 @@ const ScoreTable: React.FC = () => {
     if (id === 0) {
       return "All";
     }
-    const foundObject = users.find(item => item.id === id);
+    const foundObject = users.find(item => item.user_id === id);
     return foundObject ? foundObject.name : null; // Return name or null if not found
   };
 

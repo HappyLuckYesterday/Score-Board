@@ -8,6 +8,14 @@ const getAllWorkTimes = (req, res) => {
     });
 };
 
+const getAllWorkTimesDetail = (req, res) => {
+    const { pageNum = 1, pageSize = 10 } = req.query;
+    WorkTime.getAllDetail(pageNum, pageSize, (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+};
+
 const getWorkTimeById = (req, res) => {
     const { id } = req.params;
     WorkTime.getById(id, (err, results) => {
@@ -39,4 +47,4 @@ const deleteWorkTime = (req, res) => {
     });
 };
 
-module.exports = { getAllWorkTimes, getWorkTimeById, createWorkTime, updateWorkTime, deleteWorkTime };
+module.exports = { getAllWorkTimes, getAllWorkTimesDetail, getWorkTimeById, createWorkTime, updateWorkTime, deleteWorkTime };
