@@ -24,7 +24,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <div style={{ display: 'flex' }}>
-        {/* <Sidebar /> */}
+        <Sidebar />
         <div style={{ flexGrow: 1 }}>
           <Topbar />
           <Routes>

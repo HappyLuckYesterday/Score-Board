@@ -7,7 +7,7 @@ import { useAuth } from '../components/AuthContext';
 const Topbar: React.FC = () => {
   const { token } = useAuth();
   const isLoggedIn = (token != null); // Replace this with actual authentication logic
-  console.log("top:", token);
+  console.log("token:", token);
   return (
     <AppBar position="static">
       <Toolbar>
