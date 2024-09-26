@@ -11,9 +11,9 @@ const Sidebar: React.FC = () => {
     >
       <div style={{ textAlign: 'center', margin: '0' }}>
         <Avatar
-          src="/team1.png" // Replace with the image path
+          src="/back1.jpg" // Replace with the image path
           alt="Team Logo"
-          sx={{ width: 240, height: 180, margin: 'auto', borderRadius: '0%' }}
+          sx={{ width: 240, height: 160, margin: 'auto', borderRadius: '0%' }}
         />
       </div>
 

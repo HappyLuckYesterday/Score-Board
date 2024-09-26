@@ -1,7 +1,7 @@
 const Score = require('../models/scoreModel');
 
 const getAllScores = (req, res) => {
-    const { pageNum = 1, pageSize = 10 } = req.query;
+    const { pageNum = 1, pageSize = 10000 } = req.query;
     Score.getAll(pageNum, pageSize, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);
@@ -9,7 +9,7 @@ const getAllScores = (req, res) => {
 };
 
 const getAllDetail = (req, res) => {
-    const { pageNum = 1, pageSize = 10 } = req.query;
+    const { pageNum = 1, pageSize = 10000 } = req.query;
     Score.getAllDetail(pageNum, pageSize, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);

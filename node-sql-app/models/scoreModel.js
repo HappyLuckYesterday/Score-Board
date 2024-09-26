@@ -16,7 +16,7 @@ const Score = {
     getAllDetail: (pageNum, pageSize, callback) => {
         const offset = (pageNum - 1) * pageSize;
         db.query(`  SELECT 
-                        uu.name AS user_name,
+                        uu.nick_name AS user_name,
                         sc.group_id,
                         sc.score,
                         ss.name AS subject_name,

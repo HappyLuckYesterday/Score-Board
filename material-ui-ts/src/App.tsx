@@ -24,11 +24,12 @@ const App: React.FC = () => {
   return (
     <Router>
       <div style={{ display: 'flex' }}>
-        <Sidebar />
+        {/* <Sidebar /> */}
         <div style={{ flexGrow: 1 }}>
           <Topbar />
           <Routes>
-            <Route path="/" element={<DashboardPage />} />
+            <Route path="/" element={<ScoreboardPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/logout" element={<Logout />} />

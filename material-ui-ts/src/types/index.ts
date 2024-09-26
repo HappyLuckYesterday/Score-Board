@@ -4,6 +4,7 @@ export interface User {
   name: string;
   nick_name: string;
   email: string;
+  password: string;
   role: string;
   active_flag: 'Y' | 'N';
   group_id: number;

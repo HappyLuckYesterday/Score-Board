@@ -1,7 +1,7 @@
 const WorkTime = require('../models/workTimeModel');
 
 const getAllWorkTimes = (req, res) => {
-    const { pageNum = 1, pageSize = 10 } = req.query;
+    const { pageNum = 1, pageSize = 10000 } = req.query;
     WorkTime.getAll(pageNum, pageSize, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);
@@ -9,7 +9,7 @@ const getAllWorkTimes = (req, res) => {
 };
 
 const getAllWorkTimesDetail = (req, res) => {
-    const { pageNum = 1, pageSize = 10 } = req.query;
+    const { pageNum = 1, pageSize = 10000 } = req.query;
     WorkTime.getAllDetail(pageNum, pageSize, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);

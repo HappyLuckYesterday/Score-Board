@@ -31,6 +31,7 @@ const UserTable: React.FC = () => {
     name: '',
     nick_name: '',
     email: '',
+    password: ' ',
     role: "User",
     group_id: 0,
     active_flag: "N"
@@ -58,6 +59,7 @@ const UserTable: React.FC = () => {
       name: '',
       nick_name: '',
       email: '',
+      password: ' ',
       role: "User",
       group_id: 0,
       active_flag: "N"
@@ -196,15 +198,15 @@ const UserTable: React.FC = () => {
             value={formData.group_id}
             onChange={handleChange}
           />
-          {/* <TextField
+          <TextField
             margin="dense"
-            name="score"
+            name="password"
             label="Password"
             type="password"
             fullWidth
             value={formData.password}
             onChange={handleChange}
-          /> */}
+          />
           <Select
             margin="dense"
             name="accept"

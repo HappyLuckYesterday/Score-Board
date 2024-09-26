@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Score Board",
+  "name": "Team Score Board App",
   "icons": [
     {
       "src": "favicon.ico",

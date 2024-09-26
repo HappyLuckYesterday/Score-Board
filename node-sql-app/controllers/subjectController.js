@@ -1,7 +1,7 @@
 const Subject = require('../models/subjectModel');
 
 const getAllSubjects = (req, res) => {
-    const { pageNum = 1, pageSize = 10 } = req.query;
+    const { pageNum = 1, pageSize = 100 } = req.query;
     Subject.getAll(pageNum, pageSize, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);
