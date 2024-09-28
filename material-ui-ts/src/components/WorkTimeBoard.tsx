@@ -283,7 +283,7 @@ const WorkTimeChart: React.FC = () => {
                     
                     <ResponsiveContainer width="100%" height={600}>
                         <BarChart data={filteredData} margin={{ top: 70, right: 30, left: 20, bottom: 25 }}>
-                            <XAxis dataKey="date" />
+                            <XAxis dataKey="date" domain={[0, 20]} />
                             <YAxis />
                             <Tooltip />
                             <Legend />
@@ -314,9 +314,9 @@ const WorkTimeChart: React.FC = () => {
 
                     {/* Horizontal Bar Chart for Selected Date */}
                     <h3>Work Time for {selectedDate}</h3>
-                    <ResponsiveContainer width="100%" height={400}>
+                    <ResponsiveContainer width="100%" height={600}>
                         <BarChart data={horizontalChartData} layout="vertical" margin={{ top: 20, right: 30, left: 20, bottom: 25 }}>
-                            <XAxis type="number" />
+                            <XAxis type="number" domain={[0, 20]} />
                             <YAxis type="category" dataKey="user_name" />
                             <Tooltip />
                             <Bar dataKey="workTime" fill="#8884d8" />
@@ -342,9 +342,9 @@ const WorkTimeChart: React.FC = () => {
 
                     {/* Horizontal Bar Chart for Selected Week */}
                     <h3>Weekly Work Times from {weekStartDate} to {new Date(new Date(weekStartDate).setDate(new Date(weekStartDate).getDate() + 6)).toISOString().split('T')[0]}</h3>
-                    <ResponsiveContainer width="100%" height={400}>
+                    <ResponsiveContainer width="100%" height={600}>
                         <BarChart data={weeklyChartData} layout="vertical" margin={{ top: 20, right: 30, left: 20, bottom: 25 }}>
-                            <XAxis type="number" />
+                            <XAxis type="number" domain={[0, 20]} />
                             <YAxis type="category" dataKey="user_name" />
                             <Tooltip />
                             <Bar dataKey="workTime" fill="#8884d8" />

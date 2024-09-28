@@ -25,12 +25,15 @@ const Score = {
                     FROM 
                         score AS sc
                     JOIN 
-                    user AS uu ON sc.user_id = uu.user_id 
+                        user AS uu ON sc.user_id = uu.user_id 
                     JOIN 
-                    subject AS ss ON sc.subject_id = ss.id 
+                        subject AS ss ON sc.subject_id = ss.id 
                     WHERE 
-                    1=1
-                    LIMIT ?, ?`,
+                        1=1
+                    LIMIT ?, ?
+                    ORDER BY 
+                        create_date ASC, 
+                        sc.group_id ASC;`,
                     [offset, pageSize], 
                     (error, results) => {
                         if (error) {

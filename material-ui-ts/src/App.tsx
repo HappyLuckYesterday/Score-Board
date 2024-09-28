@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -20,7 +20,8 @@ import WorkTimeBoardPage from './pages/WorkTimeBoardPage';
 import WorkTimeTablePage from './pages/WorkTimeTablePage';
 
 const App: React.FC = () => {
-
+  const { token } = useAuth();
+  const isLoggedIn = (token != null);
   return (
     <Router>
       <div style={{ display: 'flex' }}>
@@ -33,21 +34,25 @@ const App: React.FC = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/worktimeboard" element={<WorkTimeBoardPage />} />
             <Route path="/scoreboard" element={<ScoreboardPage />} />
-            <Route path="/user-table" element={<UserTablePage />} />
-            <Route path="/score-table" element={<ScoreTablePage />} />
-            <Route path="/group-table" element={<GroupTablePage />} />
-            <Route path="/subject-table" element={<SubjectTablePage />} />
-            <Route path="/subscribe-table" element={<SubscribeTablePage />} />
-            <Route path="/worktime-table" element={<WorkTimeTablePage />} />
+            {isLoggedIn && (
+              <>
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/user-table" element={<UserTablePage />} />
+                <Route path="/score-table" element={<ScoreTablePage />} />
+                <Route path="/group-table" element={<GroupTablePage />} />
+                <Route path="/subject-table" element={<SubjectTablePage />} />
+                <Route path="/subscribe-table" element={<SubscribeTablePage />} />
+                <Route path="/worktime-table" element={<WorkTimeTablePage />} />
+              </>
+            )}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>
       </div>
-  </Router>
+    </Router>
   )
-
 }
 
 export default App;

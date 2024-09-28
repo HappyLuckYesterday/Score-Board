@@ -12,8 +12,13 @@ const Topbar: React.FC = () => {
     <AppBar position="static">
       <Toolbar>
         <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Typography variant="h6" sx={{ flexGrow: 1, mr: 5 }}>
+            Score Board
+          </Typography>
+        </Link>
+        <Link to="/worktimeboard" style={{ textDecoration: 'none', color: 'inherit' }}>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Team Board
+            Work Time
           </Typography>
         </Link>
         <Box sx={{ ml: 'auto' }}> {/* This will push the buttons to the right */}

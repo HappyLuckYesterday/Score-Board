@@ -22,7 +22,7 @@ const login = (req, res) => {
         if (err || results.length === 0) return res.status(401).json({ message: 'User not found' });
         const user = results[0];
         const match = await bcrypt.compare(password, user.password);
-        if (match) {
+        if (match && user.active_flag === 'Y') {
             const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
             console.log("login", user.id, user.email, user.role, token);
             res.json({ token });

@@ -17,7 +17,15 @@ import {
   Select,
   MenuItem,
   Box,
+  FormControl,
+  InputLabel,
+  SelectChangeEvent,
 } from '@mui/material';
+import dayjs, { Dayjs } from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { WorkTime, Subject, User } from '../types';
 import api from '../utils/api';
 
@@ -28,15 +36,23 @@ const WorkTimeTable: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [currentWorkTime, setCurrentWorkTime] = useState<WorkTime | null>(null);
   const [formData, setFormData] = useState<WorkTime>({
-    id: 0, // Adjust according to your WorkTime type
+    id: 0,
     user_id: 0,
     date: '',
     work_time: 0,
   });
 
+  const getTodayDate = (): string => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const getSubjectNameById = (id: number) => {
     const foundObject = subjects.find(item => item.id === id);
-    return foundObject ? foundObject.name : null; // Return name or null if not found
+    return foundObject ? foundObject.name : null;
   };
 
   const getUserNameById = (id: number) => {
@@ -44,25 +60,20 @@ const WorkTimeTable: React.FC = () => {
       return "All";
     }
     const foundObject = users.find(item => item.user_id === id);
-    return foundObject ? foundObject.name : null; // Return name or null if not found
+    return foundObject ? foundObject.name : null;
   };
 
   const convertDateFormat = (isoDate: string) => {
     const date = new Date(isoDate);
     
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
     
     return `${year}-${month}-${day}`;
   };
 
   useEffect(() => {
-    // Fetch worktimes data here
     const fetchWorkTimes = async () => {
       try {
         const users = await api.get('/users');
@@ -75,7 +86,6 @@ const WorkTimeTable: React.FC = () => {
         console.error('Error fetching worktimes:', error);
       }
     };
-
     fetchWorkTimes();
   }, []);
 
@@ -84,8 +94,8 @@ const WorkTimeTable: React.FC = () => {
     setFormData(worktime || {
       id: 0,
       user_id: 0,
-      date: '',
-      work_time: 0
+      date: getTodayDate(),
+      work_time: 15
     });
     setOpen(true);
   };
@@ -94,14 +104,13 @@ const WorkTimeTable: React.FC = () => {
     setOpen(false);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<number>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = () => {
     if (currentWorkTime) {
-      // Update logic here
       api.put(`/worktimes/${currentWorkTime.id}`, formData).then((response) => {
           setWorkTimes(worktimes.map((worktime) => worktime.id === currentWorkTime.id ? { ...formData, id: worktime.id } : worktime));
           setFormData({ ...formData });
@@ -109,7 +118,6 @@ const WorkTimeTable: React.FC = () => {
           console.error('Error updating worktime:', error);
       });
     } else {
-      // Create logic here
       api.post('/worktimes', formData).then((response) => {
         console.log('WorkTime created:', response.data);
         formData.id = response.data.id;
@@ -123,7 +131,6 @@ const WorkTimeTable: React.FC = () => {
   };
 
   const handleDelete = (id: number) => {
-    // Delete logic here
     api.delete(`/worktimes/${id}`).then(() => {
         setWorkTimes(worktimes.filter((worktime) => worktime.id !== id));
     }).catch((error) => {
@@ -143,7 +150,6 @@ const WorkTimeTable: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              {/* <TableCell>ID</TableCell> */}
               <TableCell style={{ width: '20%', textAlign: 'left' }}>User</TableCell>
               <TableCell style={{ width: '30%', textAlign: 'left' }}>Date</TableCell>
               <TableCell style={{ width: '20%', textAlign: 'left' }}>WorkTime</TableCell>
@@ -153,7 +159,6 @@ const WorkTimeTable: React.FC = () => {
           <TableBody>
             {worktimes.map((worktime) => (
               <TableRow key={worktime.id}>
-                {/* <TableCell>{worktime.id}</TableCell> */}
                 <TableCell>{getUserNameById(worktime.user_id)}</TableCell>
                 <TableCell>{convertDateFormat(worktime.date)}</TableCell>
                 <TableCell>{worktime.work_time}</TableCell>
@@ -176,28 +181,38 @@ const WorkTimeTable: React.FC = () => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{currentWorkTime ? 'Update WorkTime' : 'Create New WorkTime'}</DialogTitle>
         <DialogContent>
+          <FormControl fullWidth sx={{ mt: 1, minWidth: 120 }}>
+            <InputLabel id="user-select-label">User Name</InputLabel>
+            <Select
+              labelId="user-select-label"
+              name="user_id"
+              id="user-select"
+              label="User Name"
+              value={formData.user_id}
+              onChange={handleChange}
+              fullWidth
+              margin="dense"
+            >
+              {users.map((user) => (
+                <MenuItem key={user.user_id} value={user.user_id}>
+                  {user.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth sx={{ mt: 2, minWidth: 120 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Date"
+                name="date"
+                format="YYYY-MM-DD"
+                value={dayjs(formData.date)}
+                onChange={(newValue) => setFormData({ ...formData, date: newValue ? newValue.format('YYYY-MM-DD') : '' })}
+              />
+            </LocalizationProvider>
+          </FormControl>
           <TextField
-            autoFocus
-            margin="dense"
-            name="user_id"
-            label="Name"
-            type="text"
-            fullWidth
-            value={formData.user_id}
-            onChange={handleChange}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            name="date"
-            label="Date"
-            type="text"
-            fullWidth
-            value={formData.date}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
+            margin="normal"
             name="work_time"
             label="WorkTime"
             type="number"
@@ -218,5 +233,4 @@ const WorkTimeTable: React.FC = () => {
     </>
   );
 };
-
 export default WorkTimeTable;

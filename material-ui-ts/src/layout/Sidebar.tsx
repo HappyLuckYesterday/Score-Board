@@ -16,7 +16,7 @@ const Sidebar: React.FC = () => {
         >
           <div style={{ textAlign: 'center', margin: '0' }}>
             <Avatar
-              src="/back1.jpg" // Replace with the image path
+              src="/team3.png" // Replace with the image path //back1.jpg
               alt="Team Logo"
               sx={{ width: 240, height: 160, margin: 'auto', borderRadius: '0%' }}
             />
@@ -25,7 +25,7 @@ const Sidebar: React.FC = () => {
           <Divider />
 
           <List>
-            <ListItem component={Link} to="/">
+            <ListItem component={Link} to="/dashboard">
               <ListItemText primary="Dashboard" />
             </ListItem>
             <ListItem component={Link} to="/profile">
