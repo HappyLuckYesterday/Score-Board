@@ -30,10 +30,7 @@ const Score = {
                         subject AS ss ON sc.subject_id = ss.id 
                     WHERE 
                         1=1
-                    LIMIT ?, ?
-                    ORDER BY 
-                        create_date ASC, 
-                        sc.group_id ASC;`,
+                    LIMIT ?, ?`,
                     [offset, pageSize], 
                     (error, results) => {
                         if (error) {

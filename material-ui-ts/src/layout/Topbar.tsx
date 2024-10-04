@@ -16,11 +16,11 @@ const Topbar: React.FC = () => {
             Score Board
           </Typography>
         </Link>
-        <Link to="/worktimeboard" style={{ textDecoration: 'none', color: 'inherit' }}>
+        {/* <Link to="/worktimeboard" style={{ textDecoration: 'none', color: 'inherit' }}>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             Work Time
           </Typography>
-        </Link>
+        </Link> */}
         <Box sx={{ ml: 'auto' }}> {/* This will push the buttons to the right */}
           {isLoggedIn ? (
             <>
