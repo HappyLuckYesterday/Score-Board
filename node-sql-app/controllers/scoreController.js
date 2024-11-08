@@ -27,7 +27,7 @@ const getScoreById = (req, res) => {
 const createScore = (req, res) => {
     Score.create(req.body, (err, data) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.json({ message: 'Score created successfully', id: data.insertId, create_time: new Date() });
+        res.json({ message: 'Score created successfully', id: data.insertId, create_time: req.body+" 00:00:00" });
     });
 };
 

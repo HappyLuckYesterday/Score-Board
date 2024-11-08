@@ -7,6 +7,7 @@ module.exports = {
     filename: 'bundle.js',
   },
   devServer: {
+    allowedHosts: 'all',
     contentBase: path.join(__dirname, 'dist'),
     hot: true,
   },

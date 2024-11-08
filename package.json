@@ -1,0 +1,10 @@
+{
+  "name": "my-project",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"npm run start --prefix material-ui-ts\" \"npm run start --prefix node-sql-app\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}

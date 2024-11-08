@@ -12,180 +12,22 @@ import {
     Cell,
 } from 'recharts';
 import api from '../utils/api';
+import { getTodayDate } from '../utils/common';
 
 interface DataPoint {
     user_name: string;
+    group_id: number;
     date: string;
     workTime: number;
 }
-
-const sample_data: DataPoint[] = [
-    { "user_name": "John", "date": "2024-09-01", "workTime": 15 },
-    { "user_name": "John", "date": "2024-09-02", "workTime": 14 },
-    { "user_name": "John", "date": "2024-09-03", "workTime": 16 },
-    { "user_name": "John", "date": "2024-09-04", "workTime": 18 },
-    { "user_name": "John", "date": "2024-09-05", "workTime": 13 },
-    { "user_name": "John", "date": "2024-09-06", "workTime": 17 },
-    { "user_name": "John", "date": "2024-09-07", "workTime": 15 },
-    { "user_name": "John", "date": "2024-09-08", "workTime": 14 },
-    { "user_name": "John", "date": "2024-09-09", "workTime": 16 },
-    { "user_name": "John", "date": "2024-09-10", "workTime": 17 },
-    { "user_name": "John", "date": "2024-09-11", "workTime": 18 },
-    { "user_name": "John", "date": "2024-09-12", "workTime": 15 },
-    { "user_name": "John", "date": "2024-09-13", "workTime": 14 },
-    { "user_name": "John", "date": "2024-09-14", "workTime": 13 },
-    { "user_name": "John", "date": "2024-09-15", "workTime": 16 },
-    { "user_name": "John", "date": "2024-09-16", "workTime": 17 },
-    { "user_name": "John", "date": "2024-09-17", "workTime": 15 },
-    { "user_name": "John", "date": "2024-09-18", "workTime": 14 },
-    { "user_name": "John", "date": "2024-09-19", "workTime": 18 },
-    { "user_name": "John", "date": "2024-09-20", "workTime": 16 },
-    { "user_name": "John", "date": "2024-09-21", "workTime": 15 },
-    { "user_name": "John", "date": "2024-09-22", "workTime": 14 },
-    { "user_name": "John", "date": "2024-09-23", "workTime": 17 },
-    { "user_name": "John", "date": "2024-09-24", "workTime": 16 },
-    { "user_name": "John", "date": "2024-09-25", "workTime": 15 },
-    { "user_name": "John", "date": "2024-09-26", "workTime": 14 },
-    { "user_name": "John", "date": "2024-09-27", "workTime": 18 },
-    { "user_name": "John", "date": "2024-09-28", "workTime": 17 },
-    { "user_name": "John", "date": "2024-09-29", "workTime": 15 },
-    { "user_name": "John", "date": "2024-09-30", "workTime": 14 },
-
-    { "user_name": "Adam", "date": "2024-09-01", "workTime": 14 },
-    { "user_name": "Adam", "date": "2024-09-02", "workTime": 15 },
-    { "user_name": "Adam", "date": "2024-09-03", "workTime": 16 },
-    { "user_name": "Adam", "date": "2024-09-04", "workTime": 13 },
-    { "user_name": "Adam", "date": "2024-09-05", "workTime": 17 },
-    { "user_name": "Adam", "date": "2024-09-06", "workTime": 18 },
-    { "user_name": "Adam", "date": "2024-09-07", "workTime": 15 },
-    { "user_name": "Adam", "date": "2024-09-08", "workTime": 14 },
-    { "user_name": "Adam", "date": "2024-09-09", "workTime": 16 },
-    { "user_name": "Adam", "date": "2024-09-10", "workTime": 18 },
-    { "user_name": "Adam", "date": "2024-09-11", "workTime": 15 },
-    { "user_name": "Adam", "date": "2024-09-12", "workTime": 14 },
-    { "user_name": "Adam", "date": "2024-09-13", "workTime": 16 },
-    { "user_name": "Adam", "date": "2024-09-14", "workTime": 17 },
-    { "user_name": "Adam", "date": "2024-09-15", "workTime": 13 },
-    { "user_name": "Adam", "date": "2024-09-16", "workTime": 15 },
-    { "user_name": "Adam", "date": "2024-09-17", "workTime": 14 },
-    { "user_name": "Adam", "date": "2024-09-18", "workTime": 16 },
-    { "user_name": "Adam", "date": "2024-09-19", "workTime": 17 },
-    { "user_name": "Adam", "date": "2024-09-20", "workTime": 18 },
-    { "user_name": "Adam", "date": "2024-09-21", "workTime": 15 },
-    { "user_name": "Adam", "date": "2024-09-22", "workTime": 14 },
-    { "user_name": "Adam", "date": "2024-09-23", "workTime": 16 },
-    { "user_name": "Adam", "date": "2024-09-24", "workTime": 17 },
-    { "user_name": "Adam", "date": "2024-09-25", "workTime": 15 },
-    { "user_name": "Adam", "date": "2024-09-26", "workTime": 14 },
-    { "user_name": "Adam", "date": "2024-09-27", "workTime": 16 },
-    { "user_name": "Adam", "date": "2024-09-28", "workTime": 17 },
-    { "user_name": "Adam", "date": "2024-09-29", "workTime": 15 },
-    { "user_name": "Adam", "date": "2024-09-30", "workTime": 14 },
-
-    { "user_name": "Eve", "date": "2024-09-01", "workTime": 13 },
-    { "user_name": "Eve", "date": "2024-09-02", "workTime": 15 },
-    { "user_name": "Eve", "date": "2024-09-03", "workTime": 17 },
-    { "user_name": "Eve", "date": "2024-09-04", "workTime": 14 },
-    { "user_name": "Eve", "date": "2024-09-05", "workTime": 16 },
-    { "user_name": "Eve", "date": "2024-09-06", "workTime": 18 },
-    { "user_name": "Eve", "date": "2024-09-07", "workTime": 15 },
-    { "user_name": "Eve", "date": "2024-09-08", "workTime": 14 },
-    { "user_name": "Eve", "date": "2024-09-09", "workTime": 13 },
-    { "user_name": "Eve", "date": "2024-09-10", "workTime": 15 },
-    { "user_name": "Eve", "date": "2024-09-11", "workTime": 16 },
-    { "user_name": "Eve", "date": "2024-09-12", "workTime": 18 },
-    { "user_name": "Eve", "date": "2024-09-13", "workTime": 17 },
-    { "user_name": "Eve", "date": "2024-09-14", "workTime": 14 },
-    { "user_name": "Eve", "date": "2024-09-15", "workTime": 15 },
-    { "user_name": "Eve", "date": "2024-09-16", "workTime": 16 },
-    { "user_name": "Eve", "date": "2024-09-17", "workTime": 18 },
-    { "user_name": "Eve", "date": "2024-09-18", "workTime": 15 },
-    { "user_name": "Eve", "date": "2024-09-19", "workTime": 14 },
-    { "user_name": "Eve", "date": "2024-09-20", "workTime": 13 },
-    { "user_name": "Eve", "date": "2024-09-21", "workTime": 15 },
-    { "user_name": "Eve", "date": "2024-09-22", "workTime": 16 },
-    { "user_name": "Eve", "date": "2024-09-23", "workTime": 18 },
-    { "user_name": "Eve", "date": "2024-09-24", "workTime": 17 },
-    { "user_name": "Eve", "date": "2024-09-25", "workTime": 15 },
-    { "user_name": "Eve", "date": "2024-09-26", "workTime": 14 },
-    { "user_name": "Eve", "date": "2024-09-27", "workTime": 16 },
-    { "user_name": "Eve", "date": "2024-09-28", "workTime": 17 },
-    { "user_name": "Eve", "date": "2024-09-29", "workTime": 15 },
-    { "user_name": "Eve", "date": "2024-09-30", "workTime": 14 },
-
-    { "user_name": "Mike", "date": "2024-09-01", "workTime": 16 },
-    { "user_name": "Mike", "date": "2024-09-02", "workTime": 14 },
-    { "user_name": "Mike", "date": "2024-09-03", "workTime": 15 },
-    { "user_name": "Mike", "date": "2024-09-04", "workTime": 17 },
-    { "user_name": "Mike", "date": "2024-09-05", "workTime": 18 },
-    { "user_name": "Mike", "date": "2024-09-06", "workTime": 13 },
-    { "user_name": "Mike", "date": "2024-09-07", "workTime": 15 },
-    { "user_name": "Mike", "date": "2024-09-08", "workTime": 14 },
-    { "user_name": "Mike", "date": "2024-09-09", "workTime": 16 },
-    { "user_name": "Mike", "date": "2024-09-10", "workTime": 17 },
-    { "user_name": "Mike", "date": "2024-09-11", "workTime": 15 },
-    { "user_name": "Mike", "date": "2024-09-12", "workTime": 14 },
-    { "user_name": "Mike", "date": "2024-09-13", "workTime": 18 },
-    { "user_name": "Mike", "date": "2024-09-14", "workTime": 16 },
-    { "user_name": "Mike", "date": "2024-09-15", "workTime": 15 },
-    { "user_name": "Mike", "date": "2024-09-16", "workTime": 14 },
-    { "user_name": "Mike", "date": "2024-09-17", "workTime": 13 },
-    { "user_name": "Mike", "date": "2024-09-18", "workTime": 18 },
-    { "user_name": "Mike", "date": "2024-09-19", "workTime": 17 },
-    { "user_name": "Mike", "date": "2024-09-20", "workTime": 16 },
-    { "user_name": "Mike", "date": "2024-09-21", "workTime": 15 },
-    { "user_name": "Mike", "date": "2024-09-22", "workTime": 14 },
-    { "user_name": "Mike", "date": "2024-09-23", "workTime": 13 },
-    { "user_name": "Mike", "date": "2024-09-24", "workTime": 15 },
-    { "user_name": "Mike", "date": "2024-09-25", "workTime": 16 },
-    { "user_name": "Mike", "date": "2024-09-26", "workTime": 18 },
-    { "user_name": "Mike", "date": "2024-09-27", "workTime": 14 },
-    { "user_name": "Mike", "date": "2024-09-28", "workTime": 17 },
-    { "user_name": "Mike", "date": "2024-09-29", "workTime": 15 },
-    { "user_name": "Mike", "date": "2024-09-30", "workTime": 16 },
-
-    { "user_name": "Sara", "date": "2024-09-01", "workTime": 17 },
-    { "user_name": "Sara", "date": "2024-09-02", "workTime": 15 },
-    { "user_name": "Sara", "date": "2024-09-03", "workTime": 14 },
-    { "user_name": "Sara", "date": "2024-09-04", "workTime": 16 },
-    { "user_name": "Sara", "date": "2024-09-05", "workTime": 18 },
-    { "user_name": "Sara", "date": "2024-09-06", "workTime": 13 },
-    { "user_name": "Sara", "date": "2024-09-07", "workTime": 15 },
-    { "user_name": "Sara", "date": "2024-09-08", "workTime": 14 },
-    { "user_name": "Sara", "date": "2024-09-09", "workTime": 16 },
-    { "user_name": "Sara", "date": "2024-09-10", "workTime": 17 },
-    { "user_name": "Sara", "date": "2024-09-11", "workTime": 18 },
-    { "user_name": "Sara", "date": "2024-09-12", "workTime": 15 },
-    { "user_name": "Sara", "date": "2024-09-13", "workTime": 14 },
-    { "user_name": "Sara", "date": "2024-09-14", "workTime": 13 },
-    { "user_name": "Sara", "date": "2024-09-15", "workTime": 15 },
-    { "user_name": "Sara", "date": "2024-09-16", "workTime": 16 },
-    { "user_name": "Sara", "date": "2024-09-17", "workTime": 18 },
-    { "user_name": "Sara", "date": "2024-09-18", "workTime": 15 },
-    { "user_name": "Sara", "date": "2024-09-19", "workTime": 14 },
-    { "user_name": "Sara", "date": "2024-09-20", "workTime": 13 },
-    { "user_name": "Sara", "date": "2024-09-21", "workTime": 15 },
-    { "user_name": "Sara", "date": "2024-09-22", "workTime": 16 },
-    { "user_name": "Sara", "date": "2024-09-23", "workTime": 18 },
-    { "user_name": "Sara", "date": "2024-09-24", "workTime": 17 },
-    { "user_name": "Sara", "date": "2024-09-25", "workTime": 15 },
-    { "user_name": "Sara", "date": "2024-09-26", "workTime": 14 },
-    { "user_name": "Sara", "date": "2024-09-27", "workTime": 13 },
-    { "user_name": "Sara", "date": "2024-09-28", "workTime": 16 },
-    { "user_name": "Sara", "date": "2024-09-29", "workTime": 18 },
-    { "user_name": "Sara", "date": "2024-09-30", "workTime": 15 },
-]
-const sampleusers = ['John', 'Adam', 'Eve', 'Mike']; // Dynamic list of user names
 
 const WorkTimeChart: React.FC = () => {
     const [selectedUser, setSelectedUser] = useState<string>('');
     const [data, setData] = useState<DataPoint[]>([]);
     const [users, setUsers] = useState<string[]>([]);
-    const [selectedDate, setSelectedDate] = useState<string>('2024-09-23'); // Default date
-    const [weekStartDate, setWeekStartDate] = useState<string>('2024-09-23'); // Default week start date
-    const [selectedGraph, setSelectedGraph] = useState<string>('workTimeChart'); // Default graph
-
-    const filteredData = data.filter((item) => item.user_name === selectedUser);
+    const [selectedDate, setSelectedDate] = useState<string>(getTodayDate()); // Default date
+    const [weekStartDate, setWeekStartDate] = useState<string>(getTodayDate()); // Default week start date
+    const [selectedGraph, setSelectedGraph] = useState<string>('userChart'); // Default graph
 
     useEffect(() => {
         api.get('worktimes/detail/detail').then((response) => {
@@ -200,7 +42,9 @@ const WorkTimeChart: React.FC = () => {
     }, []);
 
     const getBarColor = (workTime: number) => {
-        return workTime < 15 ? '#FF6347' : '#32CD32';
+        if (workTime < 15) return '#FF4C4C';
+        if (workTime > 15) return '#00BFFF';
+        return '#3CB371'
     };
 
     // Calculate scores for all users based on selected date
@@ -230,9 +74,29 @@ const WorkTimeChart: React.FC = () => {
             }, {} as Record<string, number>);
     };
 
+    // Calculate total scores sum up
+    const getTotalScores = () => {
+        return data.reduce((acc, item) => {
+            acc[item.user_name] = (acc[item.user_name] || 0) + item.workTime;
+                return acc;
+        }, {} as Record<string, number>);
+    }
+
+    // Calculate total scores by team
+    const getTeamScores = () => {
+        return data.reduce((acc, item) => {
+            acc[item.group_id] = (acc[item.group_id] || 0) + item.workTime;
+                return acc;
+        }, {} as Record<string, number>);
+    }
+
+    const filteredData = data.filter((item) => item.user_name === selectedUser);
+
     // Get scores for the selected date and week
     const scoresByDate = getScoresByDate(selectedDate);
     const scoresByWeek = getScoresByWeek(weekStartDate);
+    const scoresTotal = getTotalScores();
+    const scoresByTeam = getTeamScores();
 
     // Format data for the horizontal bar chart
     const horizontalChartData = Object.entries(scoresByDate).map(([user_name, workTime]) => ({
@@ -242,6 +106,16 @@ const WorkTimeChart: React.FC = () => {
 
     const weeklyChartData = Object.entries(scoresByWeek).map(([user_name, workTime]) => ({
         user_name,
+        workTime,
+    }));
+
+    const totalChartData = Object.entries(scoresTotal).map(([user_name, workTime]) => ({
+        user_name,
+        workTime,
+    }));
+
+    const teamChartData = Object.entries(scoresByTeam).map(([group_id, workTime]) => ({
+        group_id,
         workTime,
     }));
 
@@ -256,14 +130,16 @@ const WorkTimeChart: React.FC = () => {
                     onChange={(e) => setSelectedGraph(e.target.value)}
                     label="Select Graph"
                 >
-                    <MenuItem value="workTimeChart">Work Time Chart</MenuItem>
-                    <MenuItem value="dateChart">Work Time for Selected Date</MenuItem>
-                    <MenuItem value="weekChart">Weekly Work Times</MenuItem>
+                    <MenuItem value="userChart">By Users</MenuItem>
+                    <MenuItem value="dateChart">By Date</MenuItem>
+                    <MenuItem value="weekChart">By Week</MenuItem>
+                    <MenuItem value="teamChart">By Team</MenuItem>
+                    <MenuItem value="totalChart">All</MenuItem>
                 </Select>
             </FormControl>
 
             {/* Render Selected Graph */}
-            {selectedGraph === 'workTimeChart' && (
+            {selectedGraph === 'userChart' && (
                 <>
                     <FormControl fullWidth variant="outlined" style={{ marginTop: '20px' }}>
                         <InputLabel id="user-select-label">Select User</InputLabel>
@@ -319,7 +195,11 @@ const WorkTimeChart: React.FC = () => {
                             <XAxis type="number" domain={[0, 20]} />
                             <YAxis type="category" dataKey="user_name" />
                             <Tooltip />
-                            <Bar dataKey="workTime" fill="#8884d8" />
+                            <Bar dataKey="workTime" fill="#8884d8">
+                                {horizontalChartData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={getBarColor(entry.workTime)} />
+                                ))}
+                            </Bar>
                         </BarChart>
                     </ResponsiveContainer>
                 </>
@@ -348,6 +228,42 @@ const WorkTimeChart: React.FC = () => {
                             <YAxis type="category" dataKey="user_name" />
                             <Tooltip />
                             <Bar dataKey="workTime" fill="#8884d8" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </>
+            )}
+
+            {selectedGraph === 'totalChart' && (
+                <>
+                    {/* Horizontal Bar Chart for Selected Date */}
+                    {/* <h3>Work Time for {selectedDate}</h3> */}
+                    <ResponsiveContainer width="100%" height={600}>
+                        <BarChart data={totalChartData} layout="vertical" margin={{ top: 20, right: 30, left: 20, bottom: 25 }}>
+                            <XAxis type="number" />
+                            <YAxis type="category" dataKey="user_name" />
+                            <Tooltip />
+                            <Bar dataKey="workTime" fill="#8884d8">
+                            </Bar>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </>
+            )}
+
+            {selectedGraph === 'teamChart' && (
+                <>
+                    {/* Horizontal Bar Chart for Selected Date */}
+                    {/* <h3>Work Time for {selectedDate}</h3> */}
+                    <ResponsiveContainer width="100%" height={600}>
+                        <BarChart data={teamChartData} margin={{ top: 70, right: 30, left: 20, bottom: 25 }}>
+                            <XAxis dataKey="group_id" domain={[0, 20]} />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="workTime" fill="#8884d8">
+                                {teamChartData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={getBarColor(entry.workTime)} />
+                                ))}
+                            </Bar>
                         </BarChart>
                     </ResponsiveContainer>
                 </>

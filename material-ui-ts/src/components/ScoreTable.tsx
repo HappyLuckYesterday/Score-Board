@@ -24,6 +24,10 @@ import {
 import { Score, Subject, User } from '../types';
 import api from '../utils/api';
 import { Form } from 'react-router-dom';
+import { time } from 'console';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const ScoreTable: React.FC = () => {
   const [scores, setScores] = useState<Score[]>([]);
@@ -78,7 +82,15 @@ const ScoreTable: React.FC = () => {
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
     
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    return `${year}-${month}-${day}`;
+  };
+
+  const getTodayDate = (): string => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   useEffect(() => {
@@ -107,7 +119,7 @@ const ScoreTable: React.FC = () => {
       score: 0,
       subject_id: 0,
       description: '',
-      create_time: '',
+      create_time: getTodayDate(),
       create_id: 0,
       update_time: '',
       update_id: 0,
@@ -144,7 +156,6 @@ const ScoreTable: React.FC = () => {
       api.post('/scores', formData).then((response) => {
         console.log('Score created:', response.data);
         formData.id = response.data.id;
-        formData.create_time = convertDateFormat(response.data.create_time);
           setScores([...scores, formData]);
           setFormData({ ...formData });
       }).catch((error) => {
@@ -274,6 +285,17 @@ const ScoreTable: React.FC = () => {
             value={formData.score}
             onChange={handleChange}
           />
+          <FormControl fullWidth sx={{ mt: 2, minWidth: 120 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Date"
+                name="date"
+                format="YYYY-MM-DD"
+                value={dayjs(formData.create_time)}
+                onChange={(newValue) => setFormData({ ...formData, create_time: newValue ? newValue.format('YYYY-MM-DD') : '' })}
+              />
+            </LocalizationProvider>
+          </FormControl>
           <TextField
             margin="normal"
             name="description"

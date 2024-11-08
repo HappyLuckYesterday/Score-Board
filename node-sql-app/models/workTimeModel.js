@@ -17,14 +17,17 @@ const WorkTime = {
         const offset = (pageNum - 1) * pageSize;
         db.query(`  SELECT 
                         uu.name AS user_name,
+                        uu.group_id AS group_id,
                         DATE_FORMAT(wt.date, '%Y-%m-%d') AS date,
                         wt.work_time AS workTime
                     FROM 
                         worktime AS wt
                     JOIN 
-                    user AS uu ON wt.user_id = uu.user_id
+                        user AS uu ON wt.user_id = uu.user_id
                     WHERE 
-                    1=1
+                        1=1
+                    ORDER BY
+                        date, group_id, user_name
                     LIMIT ?, ?`,
                     [offset, pageSize], 
                     (error, results) => {

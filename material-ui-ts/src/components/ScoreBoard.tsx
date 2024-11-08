@@ -53,8 +53,8 @@ const Scoreboard: React.FC = () => {
     return `${year}-${month}-${day}`;
   };
 
-  const startDate = new Date("2024-09-24");
-  const endDate = new Date("2024-10-24");
+  const startDate = new Date("2024-11-01");
+  const endDate = new Date("2024-11-30");
   const initChartData: ChartData[] = [];
   for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {  
     initChartData.push({
@@ -102,8 +102,8 @@ const Scoreboard: React.FC = () => {
           });
         }
       });
-      const startDate = new Date("2024-09-24");
-      const endDate = new Date("2024-10-24");
+      const startDate = new Date("2024-11-01");
+      const endDate = new Date("2024-11-30");
       for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
         if (!chartDataMap[convertDateFormat(d.toString())]) {
           chartDataMap[convertDateFormat(d.toString())] = [];

@@ -2,10 +2,11 @@ const db = require('../config/db');
 
 const Score = {
     create: (scoreData, callback) => {
-        const { user_id, group_id, score, subject_id, description, create_id } = scoreData;
+        const { user_id, group_id, score, subject_id, description, create_id, create_time } = scoreData;
+        console.log(scoreData);
         db.query(
-            'INSERT INTO score (user_id, group_id, score, subject_id, description, create_id) VALUES (?, ?, ?, ?, ?, ?)', 
-            [user_id, group_id, score, subject_id, description, create_id], 
+            'INSERT INTO score (user_id, group_id, score, subject_id, description, create_id, create_time) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+            [user_id, group_id, score, subject_id, description, create_id, create_time], 
             callback
         );
     },
@@ -29,7 +30,9 @@ const Score = {
                     JOIN 
                         subject AS ss ON sc.subject_id = ss.id 
                     WHERE 
-                        1=1
+                        DATE_FORMAT(sc.create_time, '%Y-%m')="2024-11"
+                    ORDER BY
+                        group_id, user_name
                     LIMIT ?, ?`,
                     [offset, pageSize], 
                     (error, results) => {
